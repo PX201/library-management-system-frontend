@@ -1,0 +1,22 @@
+.CounterButton{
+    background-color: rgba(0, 60, 255, 0.683);
+}
+
+.Count{
+    font-size: 150px;
+    padding: 15px;
+}
+.ResetButton{
+    
+    background-color: rgba(0, 255, 174, 0.683);
+   
+}
+button{
+    font-size: 15px;
+    width: 100px;
+    margin: 15px;
+    padding: 10px;
+    color: white;
+    border-radius: 30px;
+    border-width: 2px;
+}
