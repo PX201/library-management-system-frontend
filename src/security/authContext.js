@@ -1,23 +1,64 @@
-//1: Create Context
+import React, { createContext, useState, useContext } from 'react';
+import { AuthAPIService, removeAuthTokenFromTheApp, setAuthTokenToTheApp } from "../api/authenticationApiService";
+import { authenticate } from '../api/test';
+import { retrieveUser } from '../api/userApiServices';
 
-import { createContext, useContext, useState } from "react";
+const AuthContext = createContext();
 
-export const AuthContext = createContext()
+export const AuthProvider = ({ children }) => {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState({
+        id: 0,
+        firstNAme: '',
+        lastName: '',
+        email: '',
+        phoneNumber: '',
+        roles: []
+    })
+
+    const login = async (username, password) => {
+        try {
+            //Get Token 
+            const response1 = await AuthAPIService(username, password)
+            const token = response1.data.token
+            setAuthTokenToTheApp(token)
+            const isAuthenticated = await authenticate();
+            setIsAuthenticated(isAuthenticated);
+
+            //Fetch The User Data
+            const response2 = await retrieveUser()
+            const retrivedUser = response2.data
+            setUser(retrivedUser)
+            console.log("success Login")
+            return true;
+        } catch (error) {
+            // console.error('Login error:1', error);
+            return false;
+        }
 
 
-export const useAuth = () => useContext(AuthContext)
+    };
 
 
+    const logout = () => {
+        setIsAuthenticated(false);
+        setUser({
+            id: 0,
+            firstNAme: '',
+            lastName: '',
+            email: '',
+            phoneNumber: '',
+            roles: []
+        })
+        removeAuthTokenFromTheApp('');
 
-//2: Share the context with other component
-export function AuthProvider({children}){
-    // put some data in the context
-    const [isAuthenticated, setAuthenticated] = useState(false)
-    const [user, setUser] = useState({})
-    
-    return(
-        <AuthContext.Provider value={{isAuthenticated, setAuthenticated, user, setUser}}>
+    };
+
+    return (
+        <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
             {children}
         </AuthContext.Provider>
-    )
-}
+    );
+};
+
+export const useAuth = () => useContext(AuthContext);

@@ -214,16 +214,3 @@ export default function Users() {
         </>
     )
 }
-
-
-// const handleRolesChange = (e) => {
-//     setRoles(e.target.selectedOptions)
-//     const selectedGenreObjects = Array.from(e.target.selectedOptions, (option) => {
-//         return {
-//             genreId: option.value,
-//             genreName: option.textContent, // Get the genre name from the option text
-//         };
-//     });
-
-//     setBook({ ...book, genres: selectedGenreObjects });
-// };

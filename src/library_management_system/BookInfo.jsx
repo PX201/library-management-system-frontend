@@ -102,6 +102,7 @@ export default function BookInfo() {
     const [isEditMode, setIsEditMode] = useState(false);
     const [genres, setGenres] = useState([]);
     const [showHistory, setShowHistory] = useState(false)
+    
     const fetchGenres = async () => {
         try {
             const response = await getGenres(); // Implement this function to fetch genres
@@ -116,8 +117,8 @@ export default function BookInfo() {
             const response = await getBook(id);  // Assuming this function fetches the books
             const data = response.data;
             setBook(data); // Set the books in the state
-            console.log(book)
-            console.log(book.isAllSignedOut)
+            // console.log(book)
+            // console.log(book.isAllSignedOut)
 
         } catch (error) {
             console.log(error);
@@ -135,7 +136,6 @@ export default function BookInfo() {
         // book.preventDefault();
         // Call the API to update the book with modifiedBook
         // You'll need to implement this updateBook function
-        // Once the update is successful, you can switch off the edit mode.
         updateBook(book, book.bookId);
         setIsEditMode(false);
     };

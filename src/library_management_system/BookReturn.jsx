@@ -63,9 +63,6 @@ const generateReturnReceipt = (transactionList) => {
                 Damage FIne: ${damageFine}
             `;
 
-
-
-
             return receiptInfo;
         });
         console.log("reciept >>>" + receipts)
@@ -76,16 +73,24 @@ const generateReturnReceipt = (transactionList) => {
 
 
 
-export  const BookReturn = () => {
+export const BookReturn = () => {
+    const navigate = useNavigate()
+    
     const handleTransactionSearch = async (e) => {
         e.preventDefault()
         try {
             const response = await retrieveTransactionByTransactionNumber(transactionNumberSearch)//.then(response =>  console.log(response))
             addResponseToTransactions(response.data)
-            
-            console.log("Transactions ==>>", JSON.stringify(transactions, null, 2))
+
+            // console.log("Transactions ==>>", JSON.stringify(transactions, null, 2))
         } catch (error) {
-            console.log(error)
+            if (error.request) {
+                // The request was made, but no response was received
+                navigate('/error/403')
+            } else {
+                // Something happened in setting up the request that triggered an error
+                navigate('/error/500')
+            }
         }
 
     }
@@ -95,7 +100,7 @@ export  const BookReturn = () => {
             // await retrieveTransaction(isbnSearch, borrower.borrowerNumber).then(response => console.log(response)).catch(error => console.log(error))
             try {
                 const response = await retrieveTransaction(isbnSearch, borrower.borrowerNumber) //Because Of Some serializations/deserialisation mechanisme paid and returned changed to paid and returned when recieving data from the API
-                console.log("Response == ", JSON.stringify(response, null,2))
+                console.log("Response == ", JSON.stringify(response, null, 2))
                 addResponseToTransactions(response.data)
             } catch (error) {
                 console.log(error)
@@ -117,7 +122,7 @@ export  const BookReturn = () => {
             damageFine: data.damageFine,
             paid: data.paid,
         }
-        console.log("newTransaction == ", JSON.stringify(newTransaction, null,2))
+        console.log("newTransaction == ", JSON.stringify(newTransaction, null, 2))
 
         //newTransaction === 'object' &
         if (!newTransaction.returned & !transactions.some(t => t === newTransaction)) {
@@ -129,15 +134,25 @@ export  const BookReturn = () => {
         getBorrower(borrowerNumberSearch)
     }
     const getBorrower = async (borrowerNumber) => {
-        await retrieveBorrower(borrowerNumber)
-            .then(response => {
-                setBorrower(response.data)
-            })
-            .catch((error) => console.log(error))
-        setBorrowerNumberSearch('')
+        try {
+            const response = await retrieveBorrower(borrowerNumber)
+            setBorrower(response.data)
+            setBorrowerNumberSearch('')
+        } catch (error) {
+            if (error.response) {
+                // The request was made, but the server responded with an error status
+                navigate('/error/500')
+            } else if (error.request) {
+                // The request was made, but no response was received
+                navigate('/error/403')
+            } else {
+                // Something happened in setting up the request that triggered an error
+                navigate('/error/500')
+            }
+        }
     }
 
- 
+
 
 
 
@@ -208,7 +223,7 @@ export  const BookReturn = () => {
         </>
     )
 }
-const CheckInForm = ({ transactions , setTransactions}) => {
+const CheckInForm = ({ transactions, setTransactions }) => {
     const navigate = useNavigate()
 
     //change returned status for all transactions before check-in
@@ -218,8 +233,8 @@ const CheckInForm = ({ transactions , setTransactions}) => {
     })
     const checkIn = async (e) => {
         e.preventDefault()
-        
-        const receipts =  generateReturnReceipt(returnedTransactions)
+
+        const receipts = generateReturnReceipt(returnedTransactions)
         for (const transaction of returnedTransactions) {
             try {
                 const response = await transactionCheckIn(transaction)

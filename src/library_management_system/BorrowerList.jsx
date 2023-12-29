@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 
-export default function BorrowerList({ borrowers }) {
+export default function BorrowerList({ borrowers }){
 
     const navigate = useNavigate()
 
     const navigateToViewBorrower = (borrower) => {
         // Pass borrower data as state to the next route
-        navigate(`/viewBorrower/${borrower.userId}`, {state:{borrower}})
+        navigate(`/viewBorrower/${borrower.borrowerId}`, {state:{borrower}})
     }
     return (
         <>
@@ -24,7 +24,7 @@ export default function BorrowerList({ borrowers }) {
                     {
                         borrowers.map(
                             borrower => (
-                                <tr key={borrower.userId}>
+                                <tr key={borrower.borrowerId}>
                                     <td><button className="btn  text-decoration-none border-0" onClick={()=> navigateToViewBorrower(borrower)} ><i className="bi bi-eye"></i></button></td>
                                     <td>{borrower.firstName}</td>
                                     <td>{borrower.lastName}</td>

@@ -14,7 +14,6 @@ import BookIssue from './BookIssue';
 import BookReturn from './BookReturn'
 import Login from './Login';
 import { useAuth } from '../security/authContext';
-import { setAuthToken } from '../api/authenticationApiService';
 import { UserInfo } from './UserInfo';
 import Users from './Users';
 import { NewUser } from './NewUser';
@@ -144,18 +143,16 @@ const Offcanvas = () => {
 const MainNavbar = () => {
     const navigate = useNavigate()
     const authContext = useAuth()
-    const logOut = () => {
-        const authToken = ''
-        sessionStorage.removeItem('authToken')
-        setAuthToken(authToken)
-        authContext.setAuthenticated(false)
-        authContext.setUser({});
-        navigate(`/login`)
-    }
 
     const user = authContext.user
     const isAdmin = authContext.user.roles.includes('ADMIN');
     
+    const logOut = () => {
+        authContext.logout()
+        navigate(`/login`)
+    }
+
+
 
     return (
         <nav className="navbar navbar-expand-lg  navbar-dark bg-dark  fixed-top" >
@@ -187,7 +184,7 @@ const MainNavbar = () => {
     )
 }
 
-
+//Component for rendering different sections based on a provided 'comp' parameter
 const Container = ({ comp }) => {
     const setComp = (compName) => {
         switch (compName) {
@@ -241,11 +238,11 @@ const Container = ({ comp }) => {
                     <TransactionInfo />
                 )
             case 'userInfo':
-                return(<UserInfo />)
+                return (<UserInfo />)
             case 'users':
-                return(<Users />)
+                return (<Users />)
             case 'newUser':
-                return(<NewUser />)
+                return (<NewUser />)
             default:
                 // Default case
                 return (<Dashboard />)
@@ -262,27 +259,27 @@ const Container = ({ comp }) => {
     )
 }
 
-//main body hat contain the main container and all Routes basically the only changing place in the page 
+//Component Handling different routes based on authentication status
 const MainBody = () => {
     const isAuthenticated = useAuth().isAuthenticated
-
     return (
         <>
             <Routes>
-                <Route path='*' element={<NotFound />} />
                 {
                     !isAuthenticated &&
                     <>
+                        <Route path='*' element={<NotFound />} />
                         <Route path='login' element={<Login />} />
+                        <Route path='/' element={<Home/>} />
                     </>
                 }
                 {
                     isAuthenticated &&
                     <>
-                        <Route path="/error/:errorCode" element={<Error/>} />
+                        <Route path="/error/:errorCode" element={<Error />} />
                         <Route path='/dashboard' element={<Container comp={'dashboard'} />} />
                         <Route path='/' element={<Container comp={'dashboard'} />} />
-                        <Route path="*" element={<Container comp={'notFound'} />} />
+                        <Route path="*" element={<Error />} />
                         <Route path="issueBook" element={<Container comp={'bookIssue'} />} />
                         <Route path="books" element={<Container comp={'bookManagement'} />} />
                         <Route path="newBook" element={<Container comp={'addBook'} />} />
@@ -304,15 +301,20 @@ const MainBody = () => {
     )
 }
 
+//Default Component for home route
 const Home = () => {
-    return(
+    return (
         <>
-        
+
         </>
     )
 }
+
+//The main component managing the entire app flow
 export const LibraryManagementSystem = () => {
-    const authenticated = useAuth().isAuthenticated
+    // const navigate = useNavigate()
+    const authContext = useAuth()
+    const authenticated  = authContext.isAuthenticated
 
     return (
         <>
@@ -335,6 +337,7 @@ export const LibraryManagementSystem = () => {
                 </div>
             }
 
+
             {/* Main Body */}
 
             {/* Footer */}
@@ -343,6 +346,7 @@ export const LibraryManagementSystem = () => {
     )
 }
 
+//Component for the public navigation bar
 const PublicNavbar = () => {
     return (
         <nav className="navbar navbar-expand-lg  navbar-dark bg-dark  fixed-top" >
@@ -389,22 +393,4 @@ const PublicNavbar = () => {
     )
 }
 
-const Footer = () => {
-    <div className="container footer">
-        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-            <div class="col-md-4 d-flex align-items-center">
-                <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
-                    <i class="bi bi-bug"></i>
-                </a>
-                <span class="mb-3 mb-md-0 text-muted text-inline">© 2022 Aiman Lahmamsi</span>
-            </div>
-
-            <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-                <li class="ms-3"><a class="text-muted" href="#"><i class="bi bi-facebook"></i></a></li>
-                <li class="ms-3"><a class="text-muted" href="#"><i class="bi bi-whatsapp"></i></a></li>
-                <li class="ms-3"><a class="text-muted" href="#"></a><i class="bi bi-linkedin"></i></li>
-            </ul>
-        </footer>
-    </div>
-}
 

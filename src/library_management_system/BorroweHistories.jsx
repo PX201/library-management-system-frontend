@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
 import { getTransactionsByBorrowerId } from "../api/transactionApiServices"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 export default function BorroweHistories({ borrowerId }) {
+    const navigate = useNavigate()
 
     const [histories, setHistories] = useState([]) // Transactions made bt this Borrower
     const fetchData = async () => {
@@ -10,7 +11,16 @@ export default function BorroweHistories({ borrowerId }) {
             const response = await getTransactionsByBorrowerId(borrowerId)
             setHistories(response.data)
         } catch (error) {
-            console.log(error)
+            if (error.response) {
+                // The request was made, but the server responded with an error status
+                window.alert('Something went wrong Try Again')
+              } else if (error.request) {
+                // The request was made, but no response was received
+                navigate('/error/403')
+              } else {
+                // Something happened in setting up the request that triggered an error
+                navigate('/error/500')
+              }
         }
 
     }

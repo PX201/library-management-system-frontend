@@ -17,6 +17,16 @@ export function AddBook() {
                 setGenres(response.data);
             } catch (error) {
                 // console.error(error);
+                if (error.response) {
+                    // The request was made, but the server responded with an error status
+                    navigate('/error/500')
+                } else if (error.request) {
+                    // The request was made, but no response was received
+                    navigate('/error/403')
+                } else {
+                    // Something happened in setting up the request that triggered an error
+                    navigate('/error/500')
+                }
             }
         };
 

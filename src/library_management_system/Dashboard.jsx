@@ -55,7 +55,7 @@ export default function Dashboard() {
                         </Link>
                     </div>
                     <div className="card card-style bg-secondary m-1" >
-                        <Link to={'/transactions'} className="btn ">
+                        <Link to={'/books'} className="btn ">
                             <img src={require('../book_lookUp.png')} className="card-img-top" alt="not load" />
                             <span>Book Look-Up</span>
                         </Link>
@@ -75,7 +75,7 @@ export default function Dashboard() {
 
 
 
-// Assuming `receipts` contains the generated receipt strings
+//Receipts contains the generated receipt strings
 const DisplayReceipts = ({ receipts }) => {
     return (
         <div>
@@ -89,7 +89,6 @@ const DisplayReceipts = ({ receipts }) => {
     );
 };
 
-// Usage example: Render the component with the receipts
 
 
 const PrintReceipts = ({ receipts }) => {
@@ -109,6 +108,5 @@ const PrintReceipts = ({ receipts }) => {
     return (
         <button onClick={printReceipts}>Print Receipts</button>
     );
-};
+}
 
-// Usage example: Render the component to allow printing

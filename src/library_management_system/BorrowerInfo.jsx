@@ -7,7 +7,7 @@ export default function BorrowerInfo() {
     const navigate = useNavigate()
     const { state } = useLocation()
     const [borrower, setBorrower] = useState(state && {
-        userId: state.borrower.userId,
+        borrowerId: state.borrower.borrowerId,
         borrowerNumber: state.borrower.borrowerNumber,
         firstName: state.borrower.firstName,
         lastName: state.borrower.lastName,
@@ -24,14 +24,12 @@ export default function BorrowerInfo() {
     const [isUpdated, setIsUpdated] = useState(false)
     const [isUpdateFailed, setIsUpdateFailed] = useState(false)
 
-    const fetchData = () => {
-
-    }
+  
     const handleFormSubmit = async () => {
         await updateBorrower(borrower).then(showSuccessMessage).catch(showFailMessage)
     }
     const handleDeleteBorrower = async () => {
-        await deleteBorrower(borrower.userId).then(() => navigate("/borrowers"))
+        await deleteBorrower(borrower.borrowerId).then(() => navigate("/borrowers"))
 
     }
     const showHistory = () => {
@@ -75,10 +73,7 @@ export default function BorrowerInfo() {
                                     <i class="bi bi-floppy-fill"></i> <span className="me-2">Save</span>
                                 </button>
                                 <button
-                                    onClick={() => {
-                                        setIsEditMode(false)
-                                        fetchData()
-                                    }}
+                                    onClick={() => setIsEditMode(false)}
                                     className="btn btn-sm btn-secondary me-3"
                                 >
                                     Cancel
@@ -149,7 +144,7 @@ export default function BorrowerInfo() {
             <div className="m-3 p-2">
                 <button className="btn link-offset-2 link-underline link-underline-opacity-0" onClick={showHistory}>Histories</button>
             </div>
-            {isHistoryShown && <BorroweHistories borrowerId={borrower.userId} />}
+            {isHistoryShown && <BorroweHistories borrowerId={borrower.borrowerId} />}
         </>
     )
 }

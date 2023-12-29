@@ -1,4 +1,5 @@
 import axios from "axios";
+import { removeAuthTokenFromLocalStorage, setAuthTokenToLocalStorage } from "../security/tokenServices";
 
 
 const headers = { common: {} };
@@ -33,22 +34,29 @@ export const updateAuthentication = async (currentUsername, currentPassword) => 
   }catch{
     return false
   }
-    // .then(({ data: { token } }) => setAuthenticationToTheApp(token))
-    // .catch(() => false);
 }
 
 export const setAuthTokenToTheApp = (authToken) => {
-  // Store the token in sessionStorage
-  // console.log("authToken is -->> " + authToken)
+  // Store the token in localStorage
   try{
-    sessionStorage.setItem('authToken', authToken)
+    setAuthTokenToLocalStorage(authToken)
     setAuthToken(authToken)
+    return true;
+  }catch{
+    console.log("problem in setAuthTokenToTheApp")
+    return false;
+  }
+}
+
+export const removeAuthTokenFromTheApp = () => {
+  // remove token from localStorage and header
+  try{
+    removeAuthTokenFromLocalStorage()
+    setAuthToken('')
     return true;
   }catch{
     return false;
   }
-  
-
 }
 
 //Localhoste Api Client
@@ -65,29 +73,4 @@ export const setAuthToken = (authToken) => {
   });
 };
 
-
-
-
 export { apiClient };
-
-
-
-
-
-// export function createApiClient() {
-//   const authToken = sessionStorage.getItem('authToken'); // Fetch the token asynchronously
-//   console.log("Token been called >> " + authToken)
-//   const headers = authToken
-//     ? { 'Authorization': `Bearer ${authToken}` }
-//     : {};
-
-//   const apiClient = axios.create({
-//     baseURL: 'http://localhost:8080',
-//     headers: {
-//       common: headers,
-//     },
-//   });
-
-//   return apiClient;
-// };
-

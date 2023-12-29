@@ -1,5 +1,5 @@
 
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { searchBooks } from "../api/booksApiServices";
 import { useEffect, useState } from "react";
 
@@ -46,6 +46,7 @@ export function BookList({ books }) {
 }
 
 export default function BookManagement() {
+    const navigate = useNavigate()
     const [searchKeyword, setSearchKeyword] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     // const [isNewBookVisible, setIsNewBookVisible] = useState(toAddBook)
@@ -64,7 +65,16 @@ export default function BookManagement() {
             const response = await searchBooks(searchKeyword);
             setSearchResults(response.data);
         } catch (error) {
-            console.error(error);
+            if (error.response) {
+                // The request was made, but the server responded with an error status
+                navigate('/error/500')
+            } else if (error.request) {
+                // The request was made, but no response was received
+                navigate('/error/403')
+            } else {
+                // Something happened in setting up the request that triggered an error
+                navigate('/error/500')
+            }
         }
     }
 
@@ -145,7 +155,7 @@ export default function BookManagement() {
     )
 }
 
-// How Parameter default works 
+// How Parameter default works
 // BookManagement({toAddBook})
 // BookManagement.defaultProps = {
 //     toAddBook: false

@@ -3,14 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react";
 import { searchForTransactions } from "../api/transactionApiServices";
 
-export const yesOrNo = (isTrue) => {
-    if (isTrue)
-        return 'Yes'
-    return 'No'
-
-}
-
-export function TransactionList({ transactions }) {
+function TransactionList({ transactions }) {
 
 
     return (
@@ -47,7 +40,7 @@ export function TransactionList({ transactions }) {
     )
 }
 function TransactionRow({ transaction }) {
-    console.log("transaction is: " , JSON.stringify(transaction, null, 2))
+    // console.log("transaction is: " , JSON.stringify(transaction, null, 2))
     const navigate = useNavigate()
     const navigateToViewTransaction = (transaction) => {
         // Pass borrower data as state to the next route
@@ -72,10 +65,12 @@ function TransactionRow({ transaction }) {
 }
 
 export default function TransactionManagement() {
+    const navigate = useNavigate() 
     const [searchKeyword, setSearchKeyword] = useState('');
     const [searchResults, setSearchResults] = useState([]); // retrieved transactions
     const [currentPage, setCurrentPage] = useState(1); // Current page
     const transactionsPerPage = 10; // Number of transactions per page
+
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -87,10 +82,15 @@ export default function TransactionManagement() {
             e.preventDefault()
         try {
             const response = await searchForTransactions(searchKeyword);
-            console.log("Transactions >>> " , JSON.stringify(response, null, 2))
+            // console.log("Transactions >>> " , JSON.stringify(response, null, 2))
             setSearchResults(response.data);
         } catch (error) {
             console.error(error);
+            if(error.response.status == '500')
+                navigate('/error/500')
+            else{
+                navigate('/error')
+            }
         }
     }
 

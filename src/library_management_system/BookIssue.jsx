@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react"
 import { retrieveBorrower } from "../api/borrowerApiServices"
 import { retrieveBook } from "../api/booksApiServices"
-import { newTransaction, retrieveTransaction, retrieveTransactionByTransactionNumber, transactionCheckIn } from "../api/transactionApiServices"
+import { newTransaction} from "../api/transactionApiServices"
 import { useNavigate } from "react-router-dom"
-import PropTypes from 'prop-types'
 
 const initialGenre = {
     genreId: 0,
@@ -101,17 +100,16 @@ export function BookIssue() {
     const [borrower, setBorrower] = useState()
     const [books, setBooks] = useState([])
     const [transactionsDto, setTransactionsDto] = useState([])
-    // const [isBorrowerExist, setIsBorrowerExist] = useState(false)
     const [isbnSearch, setIsbnSearch] = useState('')
     const [borrowerNumberSearch, setBorrowerNumberSearch] = useState('')
-    // const [transactionList, setTransactionList] = useState([])
+
     const updateBooksAndTransactionsDto = (book) => {
         if (borrower && book && typeof book === 'object' && !books.some(b => b.bookId === book.bookId)) {
             setBooks(prevBooks => [...prevBooks, book]);
             const newTransactionDto = {
                 transactionId: id,
                 bookId: book.bookId,
-                borrowerId: borrower.userId,
+                borrowerId: borrower.borrowerId,
                 borrowDate: '',
                 returnDate: '',
             }
@@ -128,7 +126,14 @@ export function BookIssue() {
             .then(response => {
                 setBorrower(response.data)
             })
-            .catch((error) => console.log(error))
+            .catch((error) => {
+                console.log(error)
+                if(error.pesponse){
+                    navigate('error/404')
+                }else{
+                    navigate('error/505')
+                }
+            })
         setBorrowerNumberSearch('')
     }
     const getBookAndUpdateTheBooksList = async (isbn) => {
@@ -186,43 +191,7 @@ export function BookIssue() {
         // console.log("book>>" + returnrdBook)
         return returnrdBook ? returnrdBook.title : 'void'
     }
-    // const generateReceipt = () => {
-    //     transactionList.forEach(transaction => {console.log("transactioin in generate reciept",JSON.stringify(transaction, null, 2))
-    // }); 
-
-    //     if ( transactionList && transactionList.length > 0) {
-    //         const receipts = transactionList.map((transaction, index) => {
-    //             const {
-    //                 borrower,
-    //                 book,
-    //                 borrowDate,
-    //                 returnDate,
-    //                 transactionNumber
-    //             } = {...transaction};
-    //             // Create a string for each transaction's receipt information
-    //             const receiptInfo = `
-    //                 Receipt ${index + 1}
-    //                 Transaction Number: ${transactionNumber}
-    //                 Borrower Name: ${borrower.firstName} ${borrower.lastName}
-    //                 Book Title: ${book.title}
-    //                 Book ISBN: ${book.isbn}
-    //                 Borrow Date: ${borrowDate}
-    //                 Return Date: ${returnDate}
-
-    //             `;
-
-
-    //             return receiptInfo;
-    //         });
-    //         console.log("reciept >>>" + receipts)
-    //         return receipts;
-    //     }
-    //     return ['No transactions found'];
-    // };
-
-
-
-
+    
     const handleInputChange = (e, transactionId) => {
         const { name, value } = e.target
         const updatedTransactionsDTO = transactionsDto.map(

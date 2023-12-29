@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BorrowerList from "./BorrowerList";
 import { searchBorrowers } from "../api/borrowerApiServices";
 
 
-
-
 export default function BorrowerManagement() {
+    const navigate = useNavigate()
+
     const [searchKeyword, setSearchKeyword] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [currentPage, setCurrentPage] = useState(1); // Current page
@@ -38,7 +38,13 @@ export default function BorrowerManagement() {
             const response = await searchBorrowers(searchKeyword);
             setSearchResults(response.data);
         } catch (error) {
-            console.error(error);
+            if (error.response) {
+                // The request was made, but the server responded with an error status
+                navigate('/error/500')
+              } else {
+                // Something happened in setting up the request that triggered an error
+                navigate('/error/404')
+              }
         }
     }
 
@@ -63,9 +69,9 @@ export default function BorrowerManagement() {
                             <button className="btn btn-primary " type="button" id="button-addon2"
                                 onClick={
                                     () => {
-                                        console.log('clicked ' + searchKeyword)
+                                        // console.log('clicked ' + searchKeyword)
                                         handleSearch()
-                                        console.log(searchResults)
+                                        // console.log(searchResults)
                                     }
                                 }
                             ><i className="bi bi-search"></i></button>
