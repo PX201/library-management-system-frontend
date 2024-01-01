@@ -2,47 +2,30 @@ import axios from "axios";
 import { removeAuthTokenFromLocalStorage, setAuthTokenToLocalStorage } from "../security/tokenServices";
 
 
+const BaseURL = 'http://localhost:8080';
 const headers = { common: {} };
 
-// //Deploy Auth
-// export const AuthAPIService = (username, password) =>
-//   axios.post('http://13.56.114.134:8080/api/v1/auth/login', { email: username, password: password });
-
-
-//Deployed Api Client
-// let apiClient = axios.create({
-//   baseURL: 'http://13.56.114.134:8080',
-//   headers: headers,
-// });
-// //Deploy Authentication
-// export const setAuthToken = (authToken) => {
-//   headers.common['Authorization'] = authToken ? `Bearer ${authToken}` : '';
-//   apiClient = axios.create({
-//     baseURL: 'http://13.56.114.134:8080',
-//     headers: headers,
-//   });
-// };
 
 //Local Api
 export const AuthAPIService = (username, password) =>
-  axios.post('http://localhost:8080/api/v1/auth/login', { email: username, password: password });
+  axios.post(BaseURL + '/api/v1/auth/login', { email: username, password: password });
 
 export const updateAuthentication = async (currentUsername, currentPassword) => {
-  try{
+  try {
     const responce = await AuthAPIService(currentUsername, currentPassword)
     return setAuthTokenToTheApp(responce.data.token)
-  }catch{
+  } catch {
     return false
   }
 }
 
 export const setAuthTokenToTheApp = (authToken) => {
   // Store the token in localStorage
-  try{
+  try {
     setAuthTokenToLocalStorage(authToken)
     setAuthToken(authToken)
     return true;
-  }catch{
+  } catch {
     console.log("problem in setAuthTokenToTheApp")
     return false;
   }
@@ -50,25 +33,25 @@ export const setAuthTokenToTheApp = (authToken) => {
 
 export const removeAuthTokenFromTheApp = () => {
   // remove token from localStorage and header
-  try{
+  try {
     removeAuthTokenFromLocalStorage()
     setAuthToken('')
     return true;
-  }catch{
+  } catch {
     return false;
   }
 }
 
 //Localhoste Api Client
 let apiClient = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: BaseURL,
   headers: headers,
 });
 
 export const setAuthToken = (authToken) => {
   headers.common['Authorization'] = authToken ? `Bearer ${authToken}` : '';
   apiClient = axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: BaseURL,
     headers: headers,
   });
 };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import {  useState } from "react"
 import { retrieveBorrower } from "../api/borrowerApiServices"
 import { retrieveBook } from "../api/booksApiServices"
 import { newTransaction} from "../api/transactionApiServices"
