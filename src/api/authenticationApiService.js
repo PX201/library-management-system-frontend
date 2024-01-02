@@ -2,7 +2,7 @@ import axios from "axios";
 import { removeAuthTokenFromLocalStorage, setAuthTokenToLocalStorage } from "../security/tokenServices";
 
 
-const BaseURL = 'http://localhost:8080';
+const BaseURL = 'http://localhost:8080'; // The backend URL
 const headers = { common: {} };
 
 
