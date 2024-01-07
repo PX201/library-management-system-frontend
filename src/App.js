@@ -1,5 +1,5 @@
 import './App.css';
-import './library_management_system/wholeApp.css'
+import './library_management_system/libraryManagementSystem.css'
 import { LibraryManagementSystem } from './library_management_system/LibraryManagmentSystem';
 
 

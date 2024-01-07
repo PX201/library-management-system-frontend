@@ -44,6 +44,15 @@ const DisplayError = ({ errorCode }) => {
                     </div>
                 </>
             )
+        case '503':
+            // Handle 505 error
+            return (
+                <>
+                    <div className="d-flex align-items-center justify-content-center vh-100 ">
+                        <h1>Error 503: Service Unavailable</h1>
+                    </div>
+                </>
+            )
         default:
             // Default case
             return (

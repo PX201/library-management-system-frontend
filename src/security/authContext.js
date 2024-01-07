@@ -33,9 +33,15 @@ export const AuthProvider = ({ children }) => {
             return true;
         } catch (error) {
             // console.error('Login error:1', error);
-            return false;
+            if(error.response)
+                return false;
+            else if(error.request){
+                window.location.href = '/error/503';
+            }
+            else{
+                window.location.href = '/error/503';
+            }
         }
-
 
     };
 

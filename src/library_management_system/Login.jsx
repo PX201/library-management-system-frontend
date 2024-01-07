@@ -25,13 +25,14 @@ function Login() {
 
 
     async function checkCredenrial() {
-        const isLoggedIn = await authContext.login(username, password)
-        if (isLoggedIn) {
-            navigate('/dashboard')
-        } else {
-            setIsDenied(true)
-            console.log('denied login')
-        }
+            const isLoggedIn = await authContext.login(username, password)
+
+            if (isLoggedIn) {
+                navigate('/dashboard')
+            } else if(isLoggedIn === false) {
+                setIsDenied(true)
+                console.log('denied login')
+            }
         // authContext.setAuthenticated(false)
     }
 

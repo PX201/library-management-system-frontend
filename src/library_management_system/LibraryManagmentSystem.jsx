@@ -271,6 +271,7 @@ const MainBody = () => {
                         <Route path='*' element={<NotFound />} />
                         <Route path='login' element={<Login />} />
                         <Route path='/' element={<Home/>} />
+                        <Route path="/error/:errorCode" element={<Error />} />
                     </>
                 }
                 {
@@ -351,9 +352,6 @@ const PublicNavbar = () => {
     return (
         <nav className="navbar navbar-expand-lg  navbar-dark bg-dark  fixed-top" >
             <div className="container-fluid">
-                <button className="navbar-toggler me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#mainOffcanvas" aria-controls="mainOffcanvas">
-                    <span className="navbar-toggler-icon" data-bs-target="#offcanvasExample"></span>
-                </button>
                 <a className="navbar-brand fw-bold text-uppercase brand-text me-auto" href="/">Library Management System</a>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
@@ -361,17 +359,17 @@ const PublicNavbar = () => {
                 <div className="collapse navbar-collapse " id="navbarSupportedContent">
                     <ul className="navbar-nav  mb-2 mb-lg-0 ms-auto">
                         <li className="nav-item  ">
-                            <Link className="nav-link" to={`/`} role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <Link className="nav-link" to={`/books`} role="button"  aria-expanded="false">
                                 Books
                             </Link>
                         </li>
                         <li className="nav-item  ">
-                            <Link className="nav-link" to={`/`} role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <Link className="nav-link" to={`/pay`} role="button"  aria-expanded="false">
                                 Pay
                             </Link>
                         </li>
                         <li className="nav-item  ">
-                            <Link className="nav-link" to={`/`} role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <Link className="nav-link" to={`/bookreservation`} role="button"  aria-expanded="false">
                                 Reserve A Book
                             </Link>
                         </li>
