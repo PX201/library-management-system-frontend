@@ -42,6 +42,7 @@ export const removeAuthTokenFromTheApp = () => {
   }
 }
 
+
 //Localhoste Api Client
 let apiClient = axios.create({
   baseURL: BaseURL,
@@ -55,5 +56,14 @@ export const setAuthToken = (authToken) => {
     headers: headers,
   });
 };
+
+export const setHeader = (headerName, headerVal) => {
+  headers.common[headerName] = headerVal
+  apiClient = axios.create({
+    baseURL: BaseURL,
+    headers: headers,
+  })
+}
+
 
 export { apiClient };
