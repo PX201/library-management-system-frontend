@@ -1,4 +1,4 @@
-import { apiClient } from "./authenticationApiService";
+import { apiClient, setHeader } from "./authenticationApiService";
 
 
 
@@ -13,3 +13,15 @@ export const updatePassword = async (id, currentPassword, newPassword) => await 
 });
 export const updateUserRoles = async (id, roles) => await apiClient.put(`/api/v1/librarians/Admin/${id}/Role`, roles)
 export const registerUser = async (request) => await apiClient.post(`/api/v1/librarians/Admin`, request)
+export const sendResetLink = async (email) =>{
+    setHeader('X-Base-URL',  window.location.origin)
+    return await apiClient.post(`/api/v1/auth/resetpass/${email}`)
+}
+export const resetPassword = async (newpassword, id, token ) =>{
+    setHeader('Authorization', `Bearer ${token}`)
+    return await apiClient.post(`/api/v1/librarians/pass-reset/${id}`, null, {
+        params:{
+            newpassword:newpassword
+        }
+    })
+}
