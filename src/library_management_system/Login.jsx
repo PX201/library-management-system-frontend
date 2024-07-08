@@ -59,7 +59,7 @@ function Login() {
                                 <input type="password" className="form-control" id="inputPassword3" placeholder="Password" value={password} onChange={passwordHandler} />
                             </div>
                             <div className="d-flex">
-                                <span>Forget password? <a className="link text-info" href="/forgetpassword">Click here.</a></span>
+                                <span>Forget password? <a className="link text-info" href="/passwordmissed">Click here.</a></span>
                                 <button type="button" className="btn btn-primary ms-auto" name="login" onClick={checkCredenrial}>Login</button>
                             </div>
                         </form>

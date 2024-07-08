@@ -17,8 +17,6 @@ import { useAuth } from '../security/authContext';
 import { UserInfo } from './UserInfo';
 import Users from './Users';
 import { NewUser } from './NewUser';
-import PasswordRecovery from './PasswordRecovery';
-import PasswordReset from './PasswordReset';
 
 // Main Offcanvas/(main sidebar)
 const Offcanvas = () => {
@@ -272,9 +270,6 @@ const MainBody = () => {
                     <>
                         <Route path='*' element={<NotFound />} />
                         <Route path='login' element={<Login />} />
-                        <Route path='forgetpassword' element={<PasswordRecovery />} />
-                        <Route path='resetpassword/:token/:id' element={<PasswordReset/>} />
-                        {/* <Route path='resetpass/:token/:id' element={<PasswordReset />} /> */}
                         <Route path='/' element={<Home/>} />
                         <Route path="/error/:errorCode" element={<Error />} />
                     </>
@@ -331,7 +326,6 @@ export const LibraryManagementSystem = () => {
 
                     {/* OFFCANVAS */}
                     <Offcanvas />
-                    
                     {/* Main Body */}
                     <MainBody />
                 </>
