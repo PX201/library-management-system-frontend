@@ -4,94 +4,20 @@ import { retrieveBook } from "../api/booksApiServices"
 import { newTransaction} from "../api/transactionApiServices"
 import { useNavigate } from "react-router-dom"
 
-const initialGenre = {
-    genreId: 0,
-    genreName: ''
+
+// Generate and return an array of receipt for a Transactions
+const generateReceipt = (transaction, index) => {
+    if(transaction)
+        return `
+            Receipt ${index}
+            Transaction Number: ${transaction.transactionNumber}
+            Borrower Name: ${transaction.borrower.firstName} ${transaction.borrower.lastName}
+            Book Title: ${transaction.book.title}
+            Book ISBN: ${transaction.book.isbn}
+            Borrow Date: ${transaction.borrowDate}
+            Return Date: ${transaction.returnDate}
+        `;
 }
-
-const initialBook = {
-    bookId: 0,
-    title: '',
-    author: '',
-    description: '',
-    publicationYear: 0,
-    isbn: '',
-    shelfAddress: '',
-    copiesNumber: 0,
-    genres: [initialGenre],
-    signOutCopies: 0,
-    isAllSignedOut: false,
-
-}
-
-
-const initialTransactionDto = {
-    transactionId: 0,
-    bookId: 0,
-    borrowerId: 0,
-    borrowDate: '',
-    returnDate: '',
-
-}
-const initialBorrower = {
-    userId: 0,
-    firstName: '',
-    lastName: '',
-    birthDate: '',
-    address: '',
-    membershipStatus: '',
-    borrowerNumber: '',
-
-
-}
-const initialTransaction = {
-    transactionId: 0,
-    transactionNumber: '',
-    borrower: initialBorrower,
-    book: initialBook,
-    borrowDate: '',
-    returnDate: '',
-    isReturned: false,
-    actualReturnDate: '',
-    lateFee: 0.00,
-    damageFine: 0.00,
-    isPaid: false,
-}
-
-
-
-// Generate and return an array of receipts for the Transactions List 
-const generateReceipt = (transactionList) => {
-    if (transactionList && transactionList.length > 0) {
-        const receipts = transactionList.map((transaction, index) => {
-            const {
-                borrower,
-                book,
-                borrowDate,
-                returnDate,
-                transactionNumber,
-            } = { ...transaction };
-            // Create a string for each transaction's receipt information
-            const receiptInfo = `
-                Receipt ${index + 1}
-                Transaction Number: ${transactionNumber}
-                Borrower Name: ${borrower.firstName} ${borrower.lastName}
-                Book Title: ${book.title}
-                Book ISBN: ${book.isbn}
-                Borrow Date: ${borrowDate}
-                Return Date: ${returnDate}
-            `;
-
-
-
-
-            return receiptInfo;
-        });
-        console.log("reciept >>>" + receipts)
-        return receipts;
-    }
-    return ['No transactions found'];
-};
 
 export function BookIssue() {
     const navigate = useNavigate()
@@ -148,14 +74,9 @@ export function BookIssue() {
                 setIsbnSearch('')
             }
         } catch (error) {
-            navigate(`/error/505`)
+            
         }
     }
-
-    const removeAllBooks = () => setBooks([])
-
-    const removeBorrower = () => setBorrower()
-
 
 
     const cancelAllTransactions = () => {
@@ -163,14 +84,6 @@ export function BookIssue() {
         setBorrower()
         setTransactionsDto([])
     }
-
-    // const removeBook = (bookId) => {
-    //     setBooks(books.map(book => book.bookId !== bookId))
-    // }
-    // const removeTransactionDto = (bookId) => {
-    //     setTransactionsDto(transactionsDto.map(transactionDto => transactionDto.bookId !== bookId))
-    //     removeBook(bookId)
-    // }
 
     const removeTransactionDto = (bookId) => {
         setTransactionsDto(prevTransactionsDto => prevTransactionsDto.filter(transactionDto => transactionDto.bookId !== bookId))
@@ -205,36 +118,17 @@ export function BookIssue() {
         setTransactionsDto(updatedTransactionsDTO)
     }
 
-    const [errors, setErrors] = useState([])
-
-    const handleTransaction = async (transactionDto) => {
-        try {
-            const response = await newTransaction(transactionDto);
-            const returnedTransaction = response.data;
-
-            // Generate receipt here directly if needed
-            const receipt = generateReceipt([returnedTransaction]); // Pass as an array for single transaction
-
-            // Do something with the receipt if required
-            console.log('Generated Receipt:', receipt);
-
-        } catch (error) {
-            console.log('error is >>', error);
-            setErrors([...errors, error]);
-        }
-    };
-
     // Function to handle transactions submission
     const handleTransactions = async (e) => {
         e.preventDefault();
-        setErrors([]);
         const receipts = [];
         let errorOccurred = false;
+        let index = 1
         for (const transactionDto of transactionsDto) {
             try {
                 const response = await newTransaction(transactionDto);
                 const returnedTransaction = response.data;
-                receipts.push(...generateReceipt([returnedTransaction])); // Push receipts for each transaction
+                receipts.push(generateReceipt(returnedTransaction, index++)); // Push receipts for each transaction
 
             } catch (error) {
                 window.alert(`Can't be done something went wrong. Please try again!`)
