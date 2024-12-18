@@ -4,6 +4,11 @@
 
 This repository contains the frontend codebase for a comprehensive Library Management System developed using React.js. The system provides functionalities for managing books, borrowers, transactions, and user roles, offering a seamless experience for librarians and users.
 
+## Backend Repository
+
+The backend for this application is implemented using Spring Boot, providing robust API endpoints for managing the library's core functionalities.  
+You can find the backend repository here: [Library Management System - Backend](https://github.com/PX201/library-management-system-rest-api)
+
 ## Features
 
 ### Book Management
